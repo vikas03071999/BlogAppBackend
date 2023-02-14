@@ -9,6 +9,7 @@ import UploadRouter from './routes/upload.js'
 import cookieParser from 'cookie-parser'
 import path from 'path'
 import { fileURLToPath } from 'url';
+import cors from 'cors'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 8000
 const app = express();
 
 dotenv.config()
+app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 app.use("/images",express.static(path.join(__dirname,"/images")))
@@ -24,13 +26,13 @@ mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("connected to mongodb"))
     .catch((err) => console.log(err))
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3006');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-})
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3006');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//     next();
+// })
 
 app.use("/api/uploadfile/", UploadRouter)
 app.use("/api/auth/", AuthRouter)
